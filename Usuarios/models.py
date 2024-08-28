@@ -6,8 +6,8 @@ class Usuarios(models.Model):
     nome = models.CharField(max_length=200)
     email = models.EmailField(unique=True)
 
-    def __str__(self):
-        return self.nome
+def __str__(self):
+    return self.nome
     
     
     
