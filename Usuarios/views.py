@@ -8,17 +8,24 @@ from .serializers import UsuariosSerializer
 # Importando modelos e serializers
 
 class UsuariosView(APIView):
+    #define as ações quando recebe um requisicao do tipo post
+    def post(self, request):
+        
+        #instancia o serialize com os dados recebidos no 'request'
+        serializer = UsuariosSerializer(data=request.data, many=True)
+        if serializer.is_valid():
+
+            #se o formato recebido estiver correto, salva os dados no banco de dados
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
     def get(self, request):
         usuarios = Usuarios.objects.all()
         serializer = UsuariosSerializer(usuarios, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-    def post(self, request):
-        serializer = UsuariosSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
     
 class UsuariosReadUpdateDeleteView(APIView):
     def get(self, request, pk):
