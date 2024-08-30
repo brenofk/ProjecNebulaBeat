@@ -1,4 +1,5 @@
 from django.db import models
+from Usuarios.models import Usuarios
 
 # Create your models here.
 
@@ -15,6 +16,7 @@ class Musicas(models.Model):
 class Playlist(models.Model):
     nome = models.CharField(max_length=100)
     tipo = models.CharField(max_length=100)
+    usuario = models.ForeignKey(Usuarios, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nome
@@ -22,6 +24,7 @@ class Playlist(models.Model):
 class Comentario(models.Model):
     nota = models.CharField(max_length=10)
     data = models.DateField()
+    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.nota
