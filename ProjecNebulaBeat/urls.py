@@ -16,9 +16,15 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework.authtoken.views import obtain_auth_token
+
+
+# api/musicas e api/usuarios sao os meus endpoints p/ fazer os post no insomnia.
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/musicas/', include('Musicas.urls')),  # Inclua as URLs da app Musicas
     path('api/usuarios/', include('Usuarios.urls')), # Inclua as URLs da app Usuarios
+    path('auth/', obtain_auth_token, name='api_token_auth'),
+    
 ]

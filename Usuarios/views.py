@@ -1,47 +1,24 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from django.shortcuts import get_object_or_404
 from .models import Usuarios
-from .serializers import UsuariosSerializer
+from .serializers import UserSerializer
+from rest_framework.permissions import AllowAny 
+from rest_framework.authtoken.models import Token
 
-# Importando modelos e serializers
+class UserRegisterAPIView(APIView):
+    permission_classes = [AllowAny]  # Permite acesso público a este endpoint
 
-class UsuariosView(APIView):
-    #define as ações quando recebe um requisicao do tipo post
-    def post(self, request):
-        
-        #instancia o serialize com os dados recebidos no 'request'
-        serializer = UsuariosSerializer(data=request.data, many=True)
+    def post(self, request, *args, **kwargs):
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
-
-            #se o formato recebido estiver correto, salva os dados no banco de dados
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
+            user = serializer.save()
+            # Cria o token para o novo usuário
+            token, created = Token.objects.get_or_create(user=user)
+            return Response({"user": serializer.data, "token": token.key}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
-    def get(self, request):
+    def get(self, request, * args, **kwargs):
         usuarios = Usuarios.objects.all()
-        serializer = UsuariosSerializer(usuarios, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    
-    
-class UsuariosReadUpdateDeleteView(APIView):
-    def get(self, request, pk):
-        usuarios = get_object_or_404(Usuarios, pk=pk)
-        serializer = UsuariosSerializer(usuarios)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-    
-    def put(self, request, pk):
-        usuarios = get_object_or_404(Usuarios, pk=pk)
-        serializer = UsuariosSerializer(usuarios, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def delete(self, request, pk):
-        usuarios = get_object_or_404(Usuarios, pk=pk)
-        usuarios.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT)
+        serialize = UserSerializer(usuarios, many = True)
+        return Response(serialize.data, status=status.HTTP_200_OK)

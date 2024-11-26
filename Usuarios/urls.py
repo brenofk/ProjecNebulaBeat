@@ -1,8 +1,8 @@
 from django.urls import path
-from rest_framework.routers import DefaultRouter
-from .views import UsuariosView, UsuariosReadUpdateDeleteView
+from .views import UserRegisterAPIView
 
 urlpatterns = [
-    path('', UsuariosView.as_view(), name='usuarios-list'), # Cria um novo usuario.
-    path('<int:pk>/', UsuariosReadUpdateDeleteView.as_view(), name='usuarios-detail'),
+    
+    path('register/', UserRegisterAPIView.as_view(), name='user-register'),
+    path('', UserRegisterAPIView.as_view(), name='user-list') 
 ]
