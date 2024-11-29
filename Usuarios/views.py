@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from .models import Usuarios
+from django.contrib.auth.models import User
 from .serializers import UserSerializer
 from rest_framework.permissions import AllowAny 
 from rest_framework.authtoken.models import Token
@@ -19,6 +19,6 @@ class UserRegisterAPIView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request, * args, **kwargs):
-        usuarios = Usuarios.objects.all()
+        usuarios = User.objects.all()
         serialize = UserSerializer(usuarios, many = True)
         return Response(serialize.data, status=status.HTTP_200_OK)
