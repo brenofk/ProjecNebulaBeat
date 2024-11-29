@@ -25,6 +25,6 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('api/musicas/', include('Musicas.urls')),  # Inclua as URLs da app Musicas
     path('api/usuarios/', include('Usuarios.urls')), # Inclua as URLs da app Usuarios
-    path('auth/', obtain_auth_token, name='api_token_auth'),
+    path('auth/', obtain_auth_token, name='api_token_auth'), 
     
 ]

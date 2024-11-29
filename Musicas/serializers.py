@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Musicas, Albuns, Usuarios, MusicasAlbuns
+from .models import Musicas, Albuns, Playlist, User, MusicasAlbuns
  
 class MusicasSerializer(serializers.ModelSerializer):
     class Meta:
@@ -11,12 +11,18 @@ class AlbunsSerializer(serializers.ModelSerializer):
         model = Albuns
         fields = '__all__' 
 
-class UsuariosSerializer(serializers.ModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     class Meta:
-        model = Usuarios
+        model = User
         fields = '__all__'  
 
 class MusicasAlbunsSerializer(serializers.ModelSerializer):
     class Meta:
         model = MusicasAlbuns
         fields = '__all__'  
+
+class PlaylistSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Playlist
+        fields = '__all__'

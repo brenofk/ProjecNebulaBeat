@@ -2,8 +2,8 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import Musicas, Albuns, Usuarios, MusicasAlbuns
-from .serializers import MusicasSerializer, AlbunsSerializer, UsuariosSerializer, MusicasAlbunsSerializer
+from .models import Musicas, Albuns, User, MusicasAlbuns, Playlist
+from .serializers import MusicasSerializer, AlbunsSerializer, UserSerializer, MusicasAlbunsSerializer, PlaylistSerializer
 
 # Importando modelos e serializers
 
@@ -75,7 +75,7 @@ class AlbunsViews(APIView):
     
 class AlbunsReadUpdateDeleteView(APIView):
     
-   #  View para recuperar, atualizar ou deletar um professor específico.
+   #  View para recuperar, atualizar ou deletar um Albuns específico.
 
     def get(self, request, pk):
         albuns = get_object_or_404(Albuns, pk=pk)
@@ -101,34 +101,34 @@ class AlbunsReadUpdateDeleteView(APIView):
         albuns.delete()
         return Response(status=status.HTTP_204_NO_CONTENT) 
 
-class UsuariosViews(APIView):
+class UserViews(APIView):
 
     def post(self, request):
-        serializer = UsuariosSerializer(data=request.data)
+        serializer = UserSerializer(data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        usuarios = Usuarios.objects.all()
-        serializer = UsuariosSerializer(usuarios, many=True)
+        user = User.objects.all()
+        serializer = UserSerializer(user, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
-class UsuariosReadUpdateDeleteView(APIView):
+class UserReadUpdateDeleteView(APIView):
     def get(self, request, pk):
-        usuarios = get_object_or_404(Usuarios, pk=pk)
+        user = get_object_or_404(User, pk=pk)
         try:
-            usuarios = Usuarios.objects.get(pk=pk)
-        except Usuarios.DoesNotExist:
+            user = User.objects.get(pk=pk)
+        except User.DoesNotExist:
             return Response({'detail': 'Usuario não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
         
-        serializer = UsuariosSerializer(usuarios)
+        serializer = UserSerializer(user)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
-        usuarios = get_object_or_404(Usuarios, pk=pk)
-        serializer = UsuariosSerializer(usuarios, data=request.data)
+        user = get_object_or_404(User, pk=pk)
+        serializer = UserSerializer(user, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -136,15 +136,15 @@ class UsuariosReadUpdateDeleteView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        usuarios = get_object_or_404(Usuarios, pk=pk)
-        usuarios.delete()
+        user = get_object_or_404(User, pk=pk)
+        user.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 # Classe dos Albuns de Musicas.
 
 class MusicasAlbunsReadUpdateDeleteView(APIView):
-   #  View para recuperar, atualizar ou deletar um professor específico.
+   #  View para recuperar, atualizar ou deletar um Musicas dentro de Albuns específico.
 
     def get(self, request, pk):
         musicasAlbuns = get_object_or_404(MusicasAlbuns, pk=pk)
@@ -171,4 +171,63 @@ class MusicasAlbunsReadUpdateDeleteView(APIView):
         musicasAlbuns.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+# PARA PLAYLIST.
 
+class PlaylistViews(APIView):
+
+    def post(self, request):
+        serializer = PlaylistSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def get(self, request):
+        playlist = Playlist.objects.all()
+        serializer = PlaylistSerializer(playlist, many=True)
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from django.shortcuts import get_object_or_404
+from .models import Playlist
+from .serializers import PlaylistSerializer
+
+class PlaylistReadUpdateDeleteView(APIView):
+    # View para recuperar, atualizar ou deletar uma playlist específica.
+
+    def get(self, request, pk):
+        # Usando get_object_or_404 para recuperar a playlist ou retornar erro 404 automaticamente
+        playlist = get_object_or_404(Playlist, pk=pk)
+        
+        # Serializando os dados da playlist
+        serializer = PlaylistSerializer(playlist)
+        
+        # Retornando os dados serializados com o status HTTP 200
+        return Response(serializer.data, status=status.HTTP_200_OK)
+
+    def put(self, request, pk):
+        # Recuperando a playlist com get_object_or_404
+        playlist = get_object_or_404(Playlist, pk=pk)
+        
+        # Serializando os dados recebidos para atualizar a playlist
+        serializer = PlaylistSerializer(playlist, data=request.data)
+
+        # Validando e salvando os dados se válidos
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        # Caso os dados sejam inválidos, retornando erro
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        # Recuperando a playlist com get_object_or_404
+        playlist = get_object_or_404(Playlist, pk=pk)
+        
+        # Deletando a playlist
+        playlist.delete()
+        
+        # Retornando resposta com status 204 (sem conteúdo)
+        return Response(status=status.HTTP_204_NO_CONTENT)
