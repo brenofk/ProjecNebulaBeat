@@ -2,9 +2,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import Musicas, Albuns, User, MusicasAlbuns, Playlist
-from .serializers import MusicasSerializer, AlbunsSerializer, UserSerializer, MusicasAlbunsSerializer, PlaylistSerializer
-
+from .models import Musicas, Albuns, User, MusicasAlbuns, Comentario
+from .serializers import (
+    
+    MusicasSerializer, 
+    AlbunsSerializer, 
+    UserSerializer, 
+    MusicasAlbunsSerializer, 
+    ComentarioSerializer,
+)
 # Importando modelos e serializers
 
 class MusicasView(APIView):
@@ -171,63 +177,38 @@ class MusicasAlbunsReadUpdateDeleteView(APIView):
         musicasAlbuns.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-# PARA PLAYLIST.
-
-class PlaylistViews(APIView):
-
+class ComentariosView(APIView):
     def post(self, request):
-        serializer = PlaylistSerializer(data=request.data)
+        # Instancia o serializer com os dados recebidos no 'request'
+        serializer = ComentarioSerializer(data=request.data)
         if serializer.is_valid():
+            # Se o formato recebido estiver correto, salva os dados no banco
             serializer.save()
+            # Retorna com o código 201 e os dados do serializer
             return Response(serializer.data, status=status.HTTP_201_CREATED)
+        # Se o serializer não for válido, retorna erro 400
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
+    
     def get(self, request):
-        playlist = Playlist.objects.all()
-        serializer = PlaylistSerializer(playlist, many=True)
+        comentarios = Comentario.objects.all()
+        serializer = ComentarioSerializer(comentarios, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
-from rest_framework.views import APIView
-from rest_framework.response import Response
-from rest_framework import status
-from django.shortcuts import get_object_or_404
-from .models import Playlist
-from .serializers import PlaylistSerializer
-
-class PlaylistReadUpdateDeleteView(APIView):
-    # View para recuperar, atualizar ou deletar uma playlist específica.
-
+class ComentariosReadUpdateDeleteView(APIView):
     def get(self, request, pk):
-        # Usando get_object_or_404 para recuperar a playlist ou retornar erro 404 automaticamente
-        playlist = get_object_or_404(Playlist, pk=pk)
-        
-        # Serializando os dados da playlist
-        serializer = PlaylistSerializer(playlist)
-        
-        # Retornando os dados serializados com o status HTTP 200
+        comentario = get_object_or_404(Comentario, pk=pk)
+        serializer = ComentarioSerializer(comentario)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
-        # Recuperando a playlist com get_object_or_404
-        playlist = get_object_or_404(Playlist, pk=pk)
-        
-        # Serializando os dados recebidos para atualizar a playlist
-        serializer = PlaylistSerializer(playlist, data=request.data)
-
-        # Validando e salvando os dados se válidos
+        comentario = get_object_or_404(Comentario, pk=pk)
+        serializer = ComentarioSerializer(comentario, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
-        
-        # Caso os dados sejam inválidos, retornando erro
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        # Recuperando a playlist com get_object_or_404
-        playlist = get_object_or_404(Playlist, pk=pk)
-        
-        # Deletando a playlist
-        playlist.delete()
-        
-        # Retornando resposta com status 204 (sem conteúdo)
+        comentario = get_object_or_404(Comentario, pk=pk)
+        comentario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

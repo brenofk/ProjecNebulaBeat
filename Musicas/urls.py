@@ -7,8 +7,8 @@ from .views import (
     AlbunsReadUpdateDeleteView,
     UserViews, 
     UserReadUpdateDeleteView,
-    PlaylistViews,
-    PlaylistReadUpdateDeleteView,
+    ComentariosView,
+    ComentariosReadUpdateDeleteView,
 )
 
 urlpatterns = [
@@ -24,7 +24,8 @@ urlpatterns = [
     path('usuarios/', UserViews.as_view(), name='usuarios-list'),  # Lista/cria usuários.
     path('usuarios/<int:pk>/', UserReadUpdateDeleteView.as_view(), name='usuarios-detail'),  # Detalhes de um usuário.
 
-    # Rotas para Playlist
-    path('playlist/',PlaylistViews.as_view(), name='playlist-list'), # cria playlist.
-    path('playlist/<int:pk>/', PlaylistReadUpdateDeleteView.as_view(), name='playlist-detail') # Detalhes de uma playlist.
+    # Rotas para comentários
+    path('comentarios/', ComentariosView.as_view(), name='comentarios-list-create'),  # Para criar/listar
+    path('comentarios/<int:pk>/', ComentariosReadUpdateDeleteView.as_view(), name='comentarios-detail'),  # Para editar/visualizar/excluir
+
 ]

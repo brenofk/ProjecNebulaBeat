@@ -23,21 +23,16 @@ class Musicas(models.Model):
 class MusicasAlbuns(models.Model):
     musicas = models.ForeignKey(Musicas, on_delete=models.CASCADE)
     albuns = models.ForeignKey(Albuns, on_delete=models.CASCADE)
-
-    # novas playlist
-class Playlist(models.Model):
-    nome = models.CharField(max_length=100)
-    tipo = models.CharField(max_length=100)
-    usuario = models.ForeignKey(User, on_delete=models.CASCADE)
     
     def __str__(self):
         return self.nome
     
     # novos comentrarios
 class Comentario(models.Model):
-    nota = models.CharField(max_length=10)
+    nota = models.IntegerField()  # Alterado para IntegerField
     data = models.DateField()
-    playlist = models.ForeignKey(Playlist, on_delete=models.CASCADE, null=True, blank=True)
+    albuns = models.ForeignKey(Albuns, on_delete=models.CASCADE, null=True, blank=True)
 
     def __str__(self):
-        return self.nota
+        # Retornando a nota e o título do álbum
+        return f'Nota: {self.nota} - Álbum: {self.albuns.titulo}'
