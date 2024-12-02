@@ -2,14 +2,13 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
 from django.shortcuts import get_object_or_404
-from .models import Musicas, Albuns, User, MusicasAlbuns, Comentario
+from .models import Musicas, Playlist, User, MusicasPlaylist
 from .serializers import (
     
     MusicasSerializer, 
-    AlbunsSerializer, 
+    PlaylistSerializer, 
     UserSerializer, 
-    MusicasAlbunsSerializer, 
-    ComentarioSerializer,
+    MusicasPlaylistSerializer, 
 )
 # Importando modelos e serializers
 
@@ -18,7 +17,8 @@ class MusicasView(APIView):
     def post(self, request):
 
         #instancia o serialize com os dados recebidos no 'request'
-        serializer = MusicasSerializer(data=request.data, many=True)
+        serializer = MusicasSerializer(data=request.data)
+        
         if serializer.is_valid():
 
             #se o formato recebido estiver correto, salva os dados no banco de dados
@@ -55,13 +55,13 @@ class MusicasReadUpdateDeleteView(APIView):
     
 
 # TUDO ABAIXO E UM TESTE DA RELACAO DE 1XN
-class AlbunsViews(APIView):
+class PlaylistViews(APIView):
 
     #define as ações quando recebe um requisicao do tipo post
     def post(self, request):
 
         #instancia o serialize com os dados recebidos no 'request'
-        serializer = AlbunsSerializer(data=request.data)
+        serializer = PlaylistSerializer(data=request.data)
         if serializer.is_valid():
 
             #se o formato recebido estiver correto, salva os dados no banco de dados
@@ -74,38 +74,46 @@ class AlbunsViews(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def get(self, request):
-        albuns = Albuns.objects.all()
-        serializer = AlbunsSerializer(albuns, many=True)
+        playlist = Playlist.objects.all()
+        serializer = PlaylistSerializer(playlist, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
     
     
-class AlbunsReadUpdateDeleteView(APIView):
+class PlaylistReadUpdateDeleteView(APIView):
     
-   #  View para recuperar, atualizar ou deletar um Albuns específico.
+    # View para recuperar, atualizar ou deletar uma Playlist específica.
 
     def get(self, request, pk):
-        albuns = get_object_or_404(Albuns, pk=pk)
+        # Busca a playlist pelo 'pk' e retorna um erro 404 se não encontrada.
+        playlist = get_object_or_404(Playlist, pk=pk)
 
-        try:
-            albuns = Albuns.objects.get(pk=pk)
-        except Albuns.DoesNotExist:
-            return Response({'detail': 'Albun não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
-        
-        serializer = AlbunsSerializer(albuns)
+        # Serializa os dados da playlist.
+        serializer = PlaylistSerializer(playlist)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
-        albuns = get_object_or_404(Albuns, pk=pk)
-        serializer = AlbunsSerializer(albuns, data=request.data)
+        # Busca a playlist pelo 'pk' e retorna um erro 404 se não encontrada.
+        playlist = get_object_or_404(Playlist, pk=pk)
+
+        # Inicializa o serializer com os dados recebidos na requisição.
+        serializer = PlaylistSerializer(playlist, data=request.data)
+
         if serializer.is_valid():
+            # Se os dados forem válidos, salva a playlist com as atualizações.
             serializer.save()
             return Response(serializer.data, status=status.HTTP_200_OK)
+        
+        # Se o serializer não for válido, retorna os erros de validação.
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        albuns = get_object_or_404(Albuns, pk=pk)
-        albuns.delete()
-        return Response(status=status.HTTP_204_NO_CONTENT) 
+        # Busca a playlist pelo 'pk' e retorna um erro 404 se não encontrada.
+        playlist = get_object_or_404(Playlist, pk=pk)
+
+        # Deleta a playlist.
+        playlist.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
 
 class UserViews(APIView):
 
@@ -149,23 +157,23 @@ class UserReadUpdateDeleteView(APIView):
 
 # Classe dos Albuns de Musicas.
 
-class MusicasAlbunsReadUpdateDeleteView(APIView):
+class MusicasPlaylistReadUpdateDeleteView(APIView):
    #  View para recuperar, atualizar ou deletar um Musicas dentro de Albuns específico.
 
     def get(self, request, pk):
-        musicasAlbuns = get_object_or_404(MusicasAlbuns, pk=pk)
+        MusicasPlaylist = get_object_or_404(MusicasPlaylist, pk=pk)
 
         try:
-            musicasAlbuns = MusicasAlbuns.objects.get(pk=pk)
-        except MusicasAlbuns.DoesNotExist:
-            return Response({'detail': 'Musicas Albuns não encontrado.'}, status=status.HTTP_404_NOT_FOUND)
+            musicasPlaylist = MusicasPlaylist.objects.get(pk=pk)
+        except MusicasPlaylist.DoesNotExist:
+            return Response({'detail': 'Musicas da playlisy não encontrada.'}, status=status.HTTP_404_NOT_FOUND)
         
-        serializer = MusicasAlbunsSerializer(musicasAlbuns)
+        serializer = MusicasPlaylistSerializer(musicasPlaylist)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
     def put(self, request, pk):
-        musicasAlbuns = get_object_or_404(MusicasAlbuns, pk=pk)
-        serializer = MusicasAlbunsSerializer(musicasAlbuns, data=request.data)
+        musicasPlaylist = get_object_or_404(MusicasPlaylist, pk=pk)
+        serializer = MusicasPlaylistSerializer(musicasPlaylist, data=request.data)
 
         if serializer.is_valid():
             serializer.save()
@@ -173,42 +181,9 @@ class MusicasAlbunsReadUpdateDeleteView(APIView):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
     def delete(self, request, pk):
-        musicasAlbuns = get_object_or_404(MusicasAlbuns, pk=pk)
-        musicasAlbuns.delete()
+        musicasPlaylist = get_object_or_404(MusicasPlaylist, pk=pk)
+        musicasPlaylist.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
-class ComentariosView(APIView):
-    def post(self, request):
-        # Instancia o serializer com os dados recebidos no 'request'
-        serializer = ComentarioSerializer(data=request.data)
-        if serializer.is_valid():
-            # Se o formato recebido estiver correto, salva os dados no banco
-            serializer.save()
-            # Retorna com o código 201 e os dados do serializer
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        # Se o serializer não for válido, retorna erro 400
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
-    def get(self, request):
-        comentarios = Comentario.objects.all()
-        serializer = ComentarioSerializer(comentarios, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
 
-class ComentariosReadUpdateDeleteView(APIView):
-    def get(self, request, pk):
-        comentario = get_object_or_404(Comentario, pk=pk)
-        serializer = ComentarioSerializer(comentario)
-        return Response(serializer.data, status=status.HTTP_200_OK)
-
-    def put(self, request, pk):
-        comentario = get_object_or_404(Comentario, pk=pk)
-        serializer = ComentarioSerializer(comentario, data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def delete(self, request, pk):
-        comentario = get_object_or_404(Comentario, pk=pk)
-        comentario.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

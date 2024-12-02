@@ -1,7 +1,7 @@
 # Projeto do NebulaBeat
 
 * Criado classes de entidades do Banco de Dados.
-* Classes de entidades: Musicas, Usuarios,Albuns.
+* Classes de entidades: Usuarios, Playlist, Musicas.
 * Adicionado as CRUD's para todas as classes de entidades.
 * Implementado os serializers de todas as classes.
 * Implementados as views.
