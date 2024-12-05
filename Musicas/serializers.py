@@ -1,5 +1,6 @@
 from rest_framework import serializers
-from .models import Musicas, Playlist, User, MusicasPlaylist
+from .models import Musicas, Playlist, MusicasPlaylist
+from Usuarios.models import User
 
 # Serializers, são responsáveis por converter dados complexos (como objetos Python ou queryset) em 
 # formatos mais simples (como JSON) e vice-versa.
