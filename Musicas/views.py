@@ -10,6 +10,11 @@ from .serializers import (
     UserSerializer, 
     MusicasPlaylistSerializer, 
 )
+
+#  são responsáveis por lidar com as requisições HTTP (GET, POST, PUT, DELETE). Elas conectam os dados do banco de dados (através dos models) 
+# com o que o usuário final vê e interage.
+
+
 # Importando modelos e serializers
 
 class MusicasView(APIView):

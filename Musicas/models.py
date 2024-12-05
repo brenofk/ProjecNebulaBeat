@@ -1,5 +1,9 @@
 from django.db import models
-from Usuarios.models import User
+
+# Os models representam as tabelas no banco de dados. Cada classe no arquivo models.py mapeia para uma tabela no banco de dados e define os campos e suas propriedades.
+# Função:
+# Criar, ler, atualizar e excluir registros no banco de dados.
+# Fornecer a lógica de negócio para manipulação de dados.
 
 # Create your models here.
 

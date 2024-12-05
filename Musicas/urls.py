@@ -9,6 +9,7 @@ from .views import (
     UserReadUpdateDeleteView,
 )
 
+# mapeiam as requisições para as views. Elas conectam os endpoints (como /musicas/ ou /usuarios/) com as funcionalidades apropriadas.
 urlpatterns = [
     # Rotas para músicas
     path('', MusicasView.as_view(), name='musica-list'),  # Lista/cria músicas.

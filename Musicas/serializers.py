@@ -1,6 +1,9 @@
 from rest_framework import serializers
 from .models import Musicas, Playlist, User, MusicasPlaylist
 
+# Serializers, são responsáveis por converter dados complexos (como objetos Python ou queryset) em 
+# formatos mais simples (como JSON) e vice-versa.
+
 class PlaylistSerializer(serializers.ModelSerializer):
     class Meta:
         model = Playlist
