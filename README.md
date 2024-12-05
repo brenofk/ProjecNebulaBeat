@@ -23,12 +23,10 @@
 * Usuários poderão pesquisar músicas pelo nome, artista.
 * Exibir resultados com informações detalhadas (título, artista, gênero, etc.).
 
-# Exibir resultados com informações detalhadas (título, artista, álbum, gênero, etc.).
-
+# Gerenciamento de Playlists:
 * Criar, editar e excluir playlists.
 * Adicionar e remover músicas de playlists.
 * Visualizar todas as playlists do usuário.
-
 
 # Disciplina:
 
